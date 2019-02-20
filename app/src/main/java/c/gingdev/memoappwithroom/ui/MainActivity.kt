@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import c.gingdev.memoappwithroom.R
+import c.gingdev.memoappwithroom.db.User.UserDAO
 import c.gingdev.memoappwithroom.loginInjection
 import c.gingdev.memoappwithroom.ui.vm.UserVM
 import c.gingdev.memoappwithroom.ui.vm.vmFactory
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-	private lateinit var vmFactory: vmFactory
+	private lateinit var vmFactory: vmFactory<UserDAO>
 	private lateinit var userVM: UserVM
 
 	private val disposable = CompositeDisposable()
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
 		vmFactory = loginInjection.ProvideVMFactory(this)
 		userVM = ViewModelProviders.of(this, vmFactory).get(UserVM::class.java)
+
 		Login.setOnClickListener { login() }
 		Register.setOnClickListener { Register() }
 	}
@@ -40,9 +42,7 @@ class MainActivity : AppCompatActivity() {
 		disposable.add(userVM.findUser()
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
-			.doOnSubscribe { Log.e("onstart","getNameSubscribe")  }
-			.doOnTerminate { Log.e("onstart","getNameSubscribeTerminate") }
-			.subscribe({ Log.e("MainActivity", it)},
+			.subscribe({ login(it.ID, it.Password) },
 				{ error -> Log.e("MainActivity", "Unable to get name", error)}))
 	}
 
@@ -52,33 +52,35 @@ class MainActivity : AppCompatActivity() {
 		disposable.clear()
 	}
 
-	private fun login() {
-		val userID = UserID.text.toString()
-		val userPW = UserPW.text.toString()
-
+	private fun login(userID: String, userPW: String) {
 		Login.isEnabled = false
 
 		if (registerMode == null) {
-			disposable.add(userVM.login(userID, userPW)
+			disposable.add(userVM.User(userID, userPW)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
-				.doOnSubscribe {
-					this.Login.isEnabled = true
-					clearEditTextView()
-				}
+				.doOnSubscribe { this.Login.isEnabled = true; clearEditTextView() }
 				.doOnTerminate { this.Login.isEnabled = true }
 				.subscribe({
-					Toast.makeText(this, "안녕하세요 ${it.Name}님.", Toast.LENGTH_LONG).show()
-					startActivity( Intent(this, LoginedActivty::class.java).apply {
-							putExtra("Name", it.Name)
-					})
-				}, { Log.e("An Error Found ->", it.message) }))
+					startActivity( Intent(this, LoginedActivty::class.java).apply { putExtra("Name", it.Name) } )
+					finish()
+				}, {
+					Log.e("An Error Found ->", it.message)
+				}))
 		} else {
 			val userName = UserName.text.toString()
 
 			userVM.register(userID, userPW, userName)
-			Login.isEnabled = true
+			this.Login.isEnabled = true
+			unRegister()
 		}
+	}
+
+	private fun login() {
+		val userID = UserID.text.toString()
+		val userPW = UserPW.text.toString()
+
+		login(userID, userPW)
 	}
 
 	private fun clearEditTextView() {
@@ -95,7 +97,6 @@ class MainActivity : AppCompatActivity() {
 
 		Login.text = this.getText(R.string.Register)
 	}
-
 	private fun unRegister() {
 		registerMode = null
 

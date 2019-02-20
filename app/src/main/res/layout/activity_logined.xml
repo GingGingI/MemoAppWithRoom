@@ -14,4 +14,13 @@
 		android:textColor="#3f3f3f"
 		android:textStyle="bold"/>
 
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/RecyclerView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true">
+
+	</androidx.recyclerview.widget.RecyclerView>
+
+
 </RelativeLayout>

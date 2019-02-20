@@ -49,16 +49,21 @@
 		    android:id="@+id/Login"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
+
 		    android:text="@string/Login"
-		    android:background="#aaeeaa"/>
+		    android:textColor="#eee"
+
+		    android:background="@color/colorPrimary"/>
 
 	    <Button
 		    android:id="@+id/Register"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:background="#00000000"
-		    android:text="@string/Register"
 		    android:layout_gravity="end"
-		    android:textSize="12sp"/>
+
+		    android:text="@string/Register"
+		    android:textSize="12sp"
+
+		    android:background="#00000000"/>
     </LinearLayout>
 </RelativeLayout>
