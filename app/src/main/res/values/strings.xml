@@ -1,0 +1,11 @@
+<resources>
+	<string name="app_name">MemoAppWithRoom</string>
+	<string name="Login">Login</string>
+	<string name="Register">Register</string>
+
+	<string name="Id">ID</string>
+	<string name="Pw">Password</string>
+	<string name="Name">Name</string>
+
+	<string name="SayHello">안녕하세요 User님</string>
+</resources>

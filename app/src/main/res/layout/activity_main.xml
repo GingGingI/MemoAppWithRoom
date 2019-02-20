@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+
+	tools:context=".ui.MainActivity">
+
+    <LinearLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerInParent="true"
+	    android:orientation="vertical">
+
+	    <EditText
+		    android:id="@+id/UserID"
+		    android:layout_width="250dp"
+		    android:layout_height="wrap_content"
+
+		    android:inputType="textEmailAddress"
+
+		    android:textSize="25sp"
+		    android:hint="@string/Id"/>
+
+	    <EditText
+		    android:id="@+id/UserPW"
+		    android:layout_width="250dp"
+		    android:layout_height="wrap_content"
+
+		    android:inputType="textPassword"
+
+		    android:textSize="25sp"
+		    android:hint="@string/Pw"/>
+
+	    <EditText
+		    android:id="@+id/UserName"
+		    android:layout_width="250dp"
+		    android:layout_height="wrap_content"
+
+		    android:inputType="text"
+
+		    android:textSize="25sp"
+		    android:hint="@string/Name"
+		    android:visibility="gone"/>
+
+	    <Button
+		    android:id="@+id/Login"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:text="@string/Login"
+		    android:background="#aaeeaa"/>
+
+	    <Button
+		    android:id="@+id/Register"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="#00000000"
+		    android:text="@string/Register"
+		    android:layout_gravity="end"
+		    android:textSize="12sp"/>
+    </LinearLayout>
+</RelativeLayout>
