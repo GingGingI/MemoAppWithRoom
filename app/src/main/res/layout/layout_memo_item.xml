@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content">
+	android:layout_width="match_parent"
+	android:layout_height="?attr/actionBarSize"
+	android:layout_margin="5dp"
+	android:background="#eee"
 
-	<TextView
-		android:id="@+id/UserID"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
+	app:cardCornerRadius="3dp"
+	app:cardElevation="5dp">
 
-	<TextView
-		android:id="@+id/MemoTitle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="3dp"
+		android:orientation="vertical">
 
-</LinearLayout>
+		<TextView
+			android:id="@+id/MemoTitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+			android:text="TestTitle"/>
+
+		<TextView
+			android:id="@+id/UserID"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="asdf"/>
+	</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,5 +1,6 @@
 package c.gingdev.memoappwithroom.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -35,7 +36,7 @@ class LoginedActivty: AppCompatActivity() {
 
 		intent.apply {
 			user = getSerializableExtra("User") as User
-			SayHello.text = user?.Name ?: "User" + "님 안녕하세요!"
+			SayHello.text = (user?.Name ?: "User") + " 님 안녕하세요!"
 		}
 
 		val adapter = MemoAdapter()
