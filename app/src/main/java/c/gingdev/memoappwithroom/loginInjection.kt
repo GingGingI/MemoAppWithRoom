@@ -13,9 +13,8 @@ object loginInjection {
 		return database.getUserDAO()
 	}
 
-//
 	fun ProvideVMFactory(context: Context): vmFactory<UserDAO> {
 		val dataSource = ProvideUserDataSource(context)
-		return vmFactory(dataSource)
+		return vmFactory(dataSource, null)
 	}
 }

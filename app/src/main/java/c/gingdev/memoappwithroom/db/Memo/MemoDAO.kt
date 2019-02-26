@@ -1,19 +1,20 @@
 package c.gingdev.memoappwithroom.db.Memo
 
+import androidx.paging.DataSource
 import androidx.room.*
-import io.reactivex.Flowable
+import io.reactivex.Completable
 
 @Dao
 interface MemoDAO {
 
-    @Query("Select * From Memo Where UserId = :userId")
-    fun GetMemo(userId: String): Flowable<Memo>
+    @Query("Select * From Memo Where UserId = :userId Order By MemoDate ASC")
+    fun GetMemo(userId: String): DataSource.Factory<Int, Memo>
 
     @Query("Delete From Memo Where UserId = :userId")
-    fun DelMemoAsUser(userId: String)
+    fun DelMemoAsUser(userId: String): Completable
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun Insert(memo: Memo)
+    fun Insert(memo: Memo): Completable
 
     @Update
     fun Update(memo: Memo)

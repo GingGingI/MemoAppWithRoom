@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 				.doOnSubscribe { this.Login.isEnabled = true; clearEditTextView() }
 				.doOnTerminate { this.Login.isEnabled = true }
 				.subscribe({
-					startActivity( Intent(this, LoginedActivty::class.java).apply { putExtra("Name", it.Name) } )
+					startActivity( Intent(this, LoginedActivty::class.java).apply { putExtra("User", it)} )
 					finish()
 				}, {
 					Log.e("An Error Found ->", it.message)
@@ -70,9 +70,15 @@ class MainActivity : AppCompatActivity() {
 		} else {
 			val userName = UserName.text.toString()
 
-			userVM.register(userID, userPW, userName)
-			this.Login.isEnabled = true
-			unRegister()
+			disposable.add(userVM.register(userID, userPW, userName)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe({
+					this.Login.isEnabled = true
+					unRegister()
+				}, {
+					Log.e("Error Found ->", it.message)
+				}))
 		}
 	}
 

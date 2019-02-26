@@ -8,8 +8,9 @@ import java.util.*
 
 @Entity
 class Memo(
-    @PrimaryKey @ColumnInfo(name = "MemoId") val MemoId: String = UUID.randomUUID().toString(),
+    @PrimaryKey @ColumnInfo(name = "MemoId") val MemoId: String,
     @ColumnInfo(name = "MemoTitle") val MemoTitle: String,
     @ColumnInfo(name = "MemoContent") val MemoContent: String,
+    @ColumnInfo(name = "MemoDate") val MemoDate: Long,
     @ColumnInfo(name = "UserId") val UserId: String
 )

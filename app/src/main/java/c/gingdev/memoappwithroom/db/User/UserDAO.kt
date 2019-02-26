@@ -1,6 +1,7 @@
 package c.gingdev.memoappwithroom.db.User
 
 import androidx.room.*
+import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
@@ -13,7 +14,7 @@ interface UserDAO {
 	fun getUserByKey(key: Int): Flowable<User>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	fun Insert(vararg user: User)
+	fun Insert(vararg user: User): Completable
 
 	@Delete
 	fun Delete(vararg user: User)
