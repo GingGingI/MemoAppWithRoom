@@ -14,7 +14,6 @@ class MemoAdapter: PagedListAdapter<Memo, MemoHolder>(diffCallback) {
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoHolder
 		= MemoHolder(parent)
 
-
 	companion object {
 		private val diffCallback = object: DiffUtil.ItemCallback<Memo>() {
 			/** data list에 변경사항이 있을경우 예(: itemAdd)

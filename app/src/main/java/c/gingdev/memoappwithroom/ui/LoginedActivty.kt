@@ -2,8 +2,12 @@ package c.gingdev.memoappwithroom.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import c.gingdev.memoappwithroom.Calculate
 import c.gingdev.memoappwithroom.R
 import c.gingdev.memoappwithroom.Recycler.MemoAdapter
 import c.gingdev.memoappwithroom.Recycler.MemoHolder
@@ -31,6 +36,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class LoginedActivty: AppCompatActivity() {
+
+	private val calc = Calculate
+	private var value: Float = 0f
+	private var editPosition: Int? = null
 
 	private var isEdit: Boolean = false
 	private var isExpanded: Boolean = false
@@ -79,6 +88,43 @@ class LoginedActivty: AppCompatActivity() {
 			override fun onMove(recyclerView: RecyclerView,
 			                    viewHolder: RecyclerView.ViewHolder,
 			                    target: RecyclerView.ViewHolder): Boolean = false
+
+			override fun onChildDraw(
+				c: Canvas,
+				recyclerView: RecyclerView,
+				viewHolder: RecyclerView.ViewHolder,
+				dX: Float,
+				dY: Float,
+				actionState: Int,
+				isCurrentlyActive: Boolean) {
+				super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
+				val color: Int
+				val icon: Int
+
+				if (dY > 0) {
+					color = Color.LTGRAY
+					icon = R.drawable.ic_edit_24dp
+				} else {
+					color = Color.argb(255, 255, 119, 89)
+					icon = R.drawable.ic_delete_24dp
+				}
+
+				if (actionState == MotionEvent.ACTION_DOWN || actionState == MotionEvent.ACTION_MOVE)
+					value = calc.GetFloatValue(viewHolder.itemView.height * 0.7f, dY)
+
+				conditionViewLayout.apply {
+					background.setColorFilter(color, PorterDuff.Mode.ADD)
+					scaleX = value * 2.5f
+					scaleY = value * 2.5f
+				}
+				conditionViewImage.apply {
+					setImageDrawable(ContextCompat.getDrawable(this@LoginedActivty, icon))
+					scaleX = value * 1.5f
+					scaleY = value * 1.5f
+				}
+			}
+
 			override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 				when (direction) {
 					ItemTouchHelper.UP -> {
@@ -96,6 +142,7 @@ class LoginedActivty: AppCompatActivity() {
 						(viewHolder as MemoHolder).memo?.let {
 							memo = it
 							isEdit = true
+							editPosition = viewHolder.adapterPosition
 
 							InsertMemoTitle.text.insert(0, it.MemoTitle)
 							InsertMemoContent.text.insert(0, it.MemoContent)
@@ -104,6 +151,18 @@ class LoginedActivty: AppCompatActivity() {
 						}
 					}
 				}
+
+				fadeThread(300, object : fadeThread.FadeThreadListener{
+					override fun onFading(value: Float) {
+						this@LoginedActivty.value = value
+							conditionViewLayout.let {
+							it.scaleX = value * 2.5f
+							it.scaleY = value * 2.5f }
+						conditionViewImage.let {
+							it.scaleX = value * 1.5f
+							it.scaleY = value * 1.5f }
+					}
+				}).start()
 			}
 		}).attachToRecyclerView(memoList)
 	}
@@ -115,6 +174,12 @@ class LoginedActivty: AppCompatActivity() {
 				when(newState) {
 					BottomSheetBehavior.STATE_COLLAPSED,
 					BottomSheetBehavior.STATE_HIDDEN -> {
+						if (isEdit && memo != null)
+							if (!checkIsEmpty())
+								disposable.add(memoVM.editMemo(memo!!)
+									.subscribeOn(Schedulers.io())
+									.subscribe()).also { memo = null }
+
 						isExpanded = false
 						isEdit = false
 
@@ -124,6 +189,9 @@ class LoginedActivty: AppCompatActivity() {
 					BottomSheetBehavior.STATE_DRAGGING,
 					BottomSheetBehavior.STATE_EXPANDED -> {
 						isExpanded = true
+
+						hideKeyBoard(InsertMemoTitle)
+						hideKeyBoard(InsertMemoContent)
 
 						changeFabIcon()
 					}
@@ -165,7 +233,7 @@ class LoginedActivty: AppCompatActivity() {
 							Log.i("Update", "Success To Update")
 						}, {
 							Log.e("Update", "Cannot Update Data", it)
-						}))
+						})).also { memo = null }
 				}
 			}else {
 				/** True == Empty
@@ -215,5 +283,29 @@ class LoginedActivty: AppCompatActivity() {
 	}
 	private fun checkIsEmpty(): Boolean {
 		return (InsertMemoTitle.text.isEmpty() or InsertMemoContent.text.isEmpty())
+	}
+
+	private class fadeThread: Thread {
+		constructor(duration: Long, callback: FadeThreadListener) {
+			this.value = 1.0f
+			this.duration = duration
+			this.callback = callback
+		}
+
+		var value: Float = 1.0f
+		val duration: Long
+		val callback: FadeThreadListener
+
+		override fun run() {
+			super.run()
+			while (value > 0f) {
+				Thread.sleep(duration / 100)
+				callback.onFading(value).also { value -= 0.01f }
+			}
+		}
+
+		interface FadeThreadListener {
+			fun onFading(value: Float)
+		}
 	}
 }

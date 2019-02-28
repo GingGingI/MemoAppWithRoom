@@ -27,9 +27,43 @@
 		android:id="@+id/memoList"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_below="@id/SayHello"
 
 		android:layout_centerInParent="true"/>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<!--MaxScale 2.5-->
+			<RelativeLayout
+				android:id="@+id/conditionViewLayout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+
+				android:layout_centerInParent="true"
+
+				android:scaleX="0"
+				android:scaleY="0"
+
+				android:minWidth="50dp"
+				android:minHeight="50dp"
+
+				android:backgroundTint="#888"
+				android:background="@drawable/bg_circle_line"/>
+
+			<!--MaxScale 1.5-->
+			<ImageView
+				android:id="@+id/conditionViewImage"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+
+				android:scaleX="0"
+				android:scaleY="0"
+
+				android:layout_centerInParent="true"
+				android:src="@drawable/ic_delete_24dp"/>
+
+		</RelativeLayout>
 	</RelativeLayout>
 
 	<LinearLayout

@@ -13,6 +13,8 @@ class MemoHolder(parent: ViewGroup): RecyclerView.ViewHolder(
 	private val memoUser = itemView.findViewById<TextView>(R.id.UserID)
 
 	private val memoTitle = itemView.findViewById<TextView>(R.id.MemoTitle)
+	private val memoDate = itemView.findViewById<TextView>(R.id.MemoDate)
+	private val memoContent = itemView.findViewById<TextView>(R.id.MemoContent)
 
 	var memo: Memo? = null
 
@@ -20,6 +22,9 @@ class MemoHolder(parent: ViewGroup): RecyclerView.ViewHolder(
 		this.memo = memo
 		memoTitle.text = memo?.MemoTitle
 		memoUser.text = "${memo?.UserId} 의 메모"
+		memoDate.text = "${memo?.MemoDate}"
+		memoContent.text = "${memo?.MemoContent}"
+
 	}
 
 }

@@ -17,17 +17,64 @@
 	app:cardCornerRadius="5dp"
 	app:cardElevation="5dp">
 
-			<TextView
-				android:id="@+id/MemoTitle"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal"
-				android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-				android:text="TestTitle"/>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-			<TextView
-				android:id="@+id/UserID"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="asdf"/>
+		<TextView
+			android:id="@+id/MemoTitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+
+			android:text="TestTitle"
+			android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+		<TextView
+			android:id="@+id/UserID"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+
+			android:layout_below="@id/MemoTitle"
+			android:layout_alignParentEnd="true"
+
+			android:layout_alignParentRight="true"
+			android:layout_marginLeft="15dp"
+
+			android:layout_marginTop="5dp"
+			android:text="asdf" />
+
+		<TextView
+			android:id="@+id/MemoDate"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+
+			android:layout_below="@id/UserID"
+
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentRight="true"
+
+			android:layout_marginLeft="15dp"
+			android:text="asdf" />
+
+		<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="5dp"
+
+			android:layout_below="@id/MemoDate">
+		<TextView
+			android:id="@+id/MemoContent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+
+			android:text="test"
+
+			android:layout_gravity="center"
+
+			android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+		</ScrollView>
+	</RelativeLayout>
 </androidx.cardview.widget.CardView>
