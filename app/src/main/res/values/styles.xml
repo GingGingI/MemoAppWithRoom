@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+	<style name="Btns">
+		<item name="android:layout_width">60dp</item>
+		<item name="android:layout_height">60dp</item>
+		<item name="android:layout_margin">25dp</item>
+		<item name="android:background">@drawable/bg_circle_line</item>
+	</style>
+
 </resources>

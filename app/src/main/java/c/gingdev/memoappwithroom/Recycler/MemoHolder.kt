@@ -19,7 +19,7 @@ class MemoHolder(parent: ViewGroup): RecyclerView.ViewHolder(
 	fun bindTo(memo: Memo?) {
 		this.memo = memo
 		memoTitle.text = memo?.MemoTitle
-		memoUser.text = memo?.UserId
+		memoUser.text = "${memo?.UserId} 의 메모"
 	}
 
 }

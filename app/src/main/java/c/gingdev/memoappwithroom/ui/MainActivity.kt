@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import c.gingdev.memoappwithroom.R
+import c.gingdev.memoappwithroom.db.User.User
 import c.gingdev.memoappwithroom.db.User.UserDAO
 import c.gingdev.memoappwithroom.loginInjection
 import c.gingdev.memoappwithroom.ui.vm.UserVM
@@ -62,8 +63,12 @@ class MainActivity : AppCompatActivity() {
 				.doOnSubscribe { this.Login.isEnabled = true; clearEditTextView() }
 				.doOnTerminate { this.Login.isEnabled = true }
 				.subscribe({
-					startActivity( Intent(this, LoginedActivty::class.java).apply { putExtra("User", it)} )
-					finish()
+					if (it != null) {
+						startActivity(Intent(this, LoginedActivty::class.java).apply { putExtra("User", it) })
+						finish()
+					} else {
+						Log.e("Login", "WrongUser")
+					}
 				}, {
 					Log.e("An Error Found ->", it.message)
 				}))

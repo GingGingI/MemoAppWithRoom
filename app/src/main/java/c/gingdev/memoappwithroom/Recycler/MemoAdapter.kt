@@ -4,10 +4,8 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import c.gingdev.memoappwithroom.db.Memo.Memo
-import io.reactivex.Flowable
 
 class MemoAdapter: PagedListAdapter<Memo, MemoHolder>(diffCallback) {
-	var memo: Flowable<List<Memo>>? = null
 
 	override fun onBindViewHolder(holder: MemoHolder, position: Int) {
 		holder.bindTo(getItem(position))
@@ -15,6 +13,7 @@ class MemoAdapter: PagedListAdapter<Memo, MemoHolder>(diffCallback) {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoHolder
 		= MemoHolder(parent)
+
 
 	companion object {
 		private val diffCallback = object: DiffUtil.ItemCallback<Memo>() {

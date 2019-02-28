@@ -13,7 +13,7 @@ class UserVM(private val dataSource: UserDAO): ViewModel() {
 	fun findUser(): Flowable<User>
 			= dataSource.getUserByKey(Key)
 
-	fun User(id: String, pw: String): Flowable<User>
+	fun User(id: String, pw: String): Flowable<User?>
 			= dataSource.Login(id, pw)
 
 	fun register(id: String, pw: String, Name: String)

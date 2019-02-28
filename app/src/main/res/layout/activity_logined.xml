@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
 	<TextView
 		android:id="@+id/SayHello"
@@ -21,11 +26,47 @@
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/memoList"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:layout_below="@id/SayHello"
 
-		android:layout_centerInParent="true"
-		app:layoutManager="LinearLayoutManager"/>
+		android:layout_centerInParent="true"/>
+	</RelativeLayout>
+
+	<LinearLayout
+		android:id="@+id/InsertMemoLayout"
+		android:layout_width="match_parent"
+		android:layout_height="450dp"
+		android:windowSoftInputMode="adjustResize"
+
+		android:paddingTop="30dp"
+
+		android:orientation="vertical"
+
+		app:behavior_hideable="true"
+		app:behavior_peekHeight="0dp"
+		app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+		<EditText
+			android:id="@+id/InsertMemoTitle"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+
+			android:hint="@string/HintTitle"
+
+			android:background="#aaa"/>
+
+		<EditText
+			android:id="@+id/InsertMemoContent"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:gravity="start|top"
+
+			android:hint="@string/HintContent"
+
+			android:background="#eee"/>
+
+	</LinearLayout>
 
 	<com.google.android.material.floatingactionbutton.FloatingActionButton
 		android:id="@+id/fab"
@@ -35,10 +76,13 @@
 
 		android:src="@drawable/ic_add_24dp"
 
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentRight="true"
+		android:layout_gravity="end|bottom"
+
+		app:layout_anchor="@id/InsertMemoLayout"
+		app:layout_anchorGravity="top|end"
 
 		app:pressedTranslationZ="5dp"
 		app:elevation="5dp"/>
 
-</RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

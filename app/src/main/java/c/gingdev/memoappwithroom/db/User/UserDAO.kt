@@ -8,7 +8,7 @@ import io.reactivex.Flowable
 interface UserDAO {
 
 	@Query("Select * From User Where UserId = :Id And Password = :Pw")
-	fun Login(Id: String, Pw: String): Flowable<User>
+	fun Login(Id: String, Pw: String): Flowable<User?>
 
 	@Query("Select * From User Where `Key` = :key")
 	fun getUserByKey(key: Int): Flowable<User>
@@ -17,7 +17,7 @@ interface UserDAO {
 	fun Insert(vararg user: User): Completable
 
 	@Delete
-	fun Delete(vararg user: User)
+	fun Delete(vararg user: User): Completable
 
 	@Update
 	fun Update(vararg user: User)

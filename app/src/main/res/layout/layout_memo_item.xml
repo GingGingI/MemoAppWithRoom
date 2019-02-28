@@ -4,30 +4,30 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="?attr/actionBarSize"
-	android:layout_margin="5dp"
+	android:layout_height="match_parent"
+	android:layout_gravity="center"
+
+	android:layout_marginStart="25dp"
+	android:layout_marginEnd="25dp"
+	android:layout_marginTop="95dp"
+	android:layout_marginBottom="95dp"
+
 	android:background="#eee"
 
-	app:cardCornerRadius="3dp"
+	app:cardCornerRadius="5dp"
 	app:cardElevation="5dp">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_margin="3dp"
-		android:orientation="vertical">
+			<TextView
+				android:id="@+id/MemoTitle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+				android:text="TestTitle"/>
 
-		<TextView
-			android:id="@+id/MemoTitle"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-			android:text="TestTitle"/>
-
-		<TextView
-			android:id="@+id/UserID"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="asdf"/>
-	</LinearLayout>
+			<TextView
+				android:id="@+id/UserID"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="asdf"/>
 </androidx.cardview.widget.CardView>

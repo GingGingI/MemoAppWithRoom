@@ -7,6 +7,7 @@ import c.gingdev.memoappwithroom.Recycler.MemoAdapter
 import c.gingdev.memoappwithroom.db.Memo.Memo
 import c.gingdev.memoappwithroom.db.Memo.MemoDAO
 import c.gingdev.memoappwithroom.db.User.User
+import io.reactivex.Completable
 import java.util.*
 
 /**
@@ -14,7 +15,6 @@ import java.util.*
  * */
 class MemoVM(private val dataSource: MemoDAO, private val user: User?): ViewModel() {
 
-	private var Count: Int = 0
 	private var adapter: MemoAdapter? = null
 
 //	Get
@@ -27,7 +27,7 @@ class MemoVM(private val dataSource: MemoDAO, private val user: User?): ViewMode
 		maxSize = 50))
 
 //	Set
-	fun setMemo(userID: String, title: String, date: Long, content: String)
+	fun setMemo(userID: String, title: String, content: String, date: Long)
 		= dataSource.Insert(Memo(UUID.randomUUID().toString(), title, content, date, userID))
 
 //  Remove
@@ -36,10 +36,13 @@ class MemoVM(private val dataSource: MemoDAO, private val user: User?): ViewMode
 	fun removeAsUser(userID: String)
 		= dataSource.DelMemoAsUser(userID)
 
+//	Update/Edit
+	fun editMemo(memo: Memo)
+		= dataSource.Update(memo)
+
 //	Adapter
 	fun adapter(): MemoAdapter
 			= adapter ?: MemoAdapter().also { adapter = it }
-
 
 	companion object {
 		val TAG = javaClass.simpleName
