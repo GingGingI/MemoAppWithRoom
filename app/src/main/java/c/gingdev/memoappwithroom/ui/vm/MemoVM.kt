@@ -43,6 +43,7 @@ class MemoVM(private val dataSource: MemoDAO, private val user: User?): ViewMode
 //	Adapter
 	fun adapter(): MemoAdapter
 			= adapter ?: MemoAdapter().also { adapter = it }
+	fun adapter(adapter: MemoAdapter) { this.adapter = adapter }
 
 	companion object {
 		val TAG = javaClass.simpleName

@@ -1,6 +1,8 @@
 package c.gingdev.memoappwithroom.ui
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,7 +43,11 @@ class MainActivity : AppCompatActivity() {
 
 	override fun onStart() {
 		super.onStart()
-		disposable.add(userVM.findUser()
+		val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+		val key = pref.getString("key", "")!!
+
+		if (key != "")
+		disposable.add(userVM.findUser(key)
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe({ login(it.ID, it.Password) },
@@ -64,7 +71,12 @@ class MainActivity : AppCompatActivity() {
 				.doOnTerminate { this.Login.isEnabled = true }
 				.subscribe({
 					if (it != null) {
-						startActivity(Intent(this, LoginedActivty::class.java).apply { putExtra("User", it) })
+						startActivity(Intent(this, LoginedActivty::class.java).apply {
+							val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+							pref.edit().apply { putString("key", it.Key) }.apply()
+
+							putExtra("User", it)
+						})
 						finish()
 					} else {
 						Log.e("Login", "WrongUser")
@@ -75,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 		} else {
 			val userName = UserName.text.toString()
 
-			disposable.add(userVM.register(userID, userPW, userName)
+			disposable.add(userVM.register(UUID.randomUUID().toString(), userID, userPW, userName)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe({

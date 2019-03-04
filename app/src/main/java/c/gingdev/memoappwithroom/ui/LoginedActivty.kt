@@ -2,11 +2,15 @@ package c.gingdev.memoappwithroom.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -62,12 +66,13 @@ class LoginedActivty: AppCompatActivity() {
 		setContentView(R.layout.activity_logined)
 		intent.apply {
 			user = getSerializableExtra("User") as User
-			SayHello.text = (user?.Name ?: "User") + " 님 안녕하세요!"
+			SayHello.text = (user?.Name ?: "OOO") + " 님 안녕하세요!"
 		}
 		memoList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 		memoList.adapter = MemoAdapter().also {
 			vmFactory = memoInjection.ProvideVMFactory(this, user)
 			memoVM.memos.observe(this, Observer(it::submitList))
+			memoVM.adapter(it)
 		}
 
 		fab.setOnClickListener { addItem() }
@@ -75,6 +80,26 @@ class LoginedActivty: AppCompatActivity() {
 		initSnapHelper()
 		initSwipeGesture()
 		bottomSheetInit()
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.menu_logined, menu)
+		return super.onCreateOptionsMenu(menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+		val id = item?.itemId
+		when(id) {
+			R.id.Exit -> {
+				getSharedPreferences("pref", Context.MODE_PRIVATE).edit().remove("key").apply()
+
+				val i = Intent(this, MainActivity::class.java)
+				i.putExtra("user", user)
+				startActivity(i)
+				finish()
+			}
+		}
+		return super.onOptionsItemSelected(item)
 	}
 
 	private fun initSnapHelper() {
@@ -221,7 +246,8 @@ class LoginedActivty: AppCompatActivity() {
 	}
 	private fun getUser(): User? {
 //		TestUser
-		return User(1,"asdf", "asdf", "Test")
+		return User("","asdf", "asdf", "Test")
+
 	}
 
 	fun addItem() {
@@ -251,6 +277,7 @@ class LoginedActivty: AppCompatActivity() {
 						.observeOn(AndroidSchedulers.mainThread())
 						.subscribe({
 							Log.i("SuccessToInsert", user?.ID.toString())
+							memoList.smoothScrollToPosition(0)
 						}, {
 							Log.e("FailedToInsert", it.message)
 						}))

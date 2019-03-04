@@ -7,7 +7,7 @@ import io.reactivex.Completable
 @Dao
 interface MemoDAO {
 
-    @Query("Select * From Memo Where UserId = :userId Order By MemoDate DESC")
+    @Query("Select * From Memo Where UserId = :userId Order By MemoDate ASC")
     fun GetMemo(userId: String): DataSource.Factory<Int, Memo>
 
     @Query("Delete From Memo Where UserId = :userId")

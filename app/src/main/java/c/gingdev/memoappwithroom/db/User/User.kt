@@ -7,7 +7,7 @@ import java.io.Serializable
 
 @Entity
 class User(
-	@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Key") val Key: Int,
+	@PrimaryKey @ColumnInfo(name = "Key") val Key: String,
 	@ColumnInfo(name = "UserId") val ID: String,
 	@ColumnInfo(name = "Password") val Password: String,
 	@ColumnInfo(name = "Name") val Name: String

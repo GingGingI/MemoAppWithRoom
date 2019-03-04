@@ -11,7 +11,7 @@ interface UserDAO {
 	fun Login(Id: String, Pw: String): Flowable<User?>
 
 	@Query("Select * From User Where `Key` = :key")
-	fun getUserByKey(key: Int): Flowable<User>
+	fun getUserByKey(key: String): Flowable<User>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun Insert(vararg user: User): Completable
