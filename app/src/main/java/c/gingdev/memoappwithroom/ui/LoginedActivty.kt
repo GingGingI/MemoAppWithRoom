@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import c.gingdev.memoappwithroom.Calculate
 import c.gingdev.memoappwithroom.R
@@ -60,24 +60,26 @@ class LoginedActivty: AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_logined)
-
 		intent.apply {
 			user = getSerializableExtra("User") as User
 			SayHello.text = (user?.Name ?: "User") + " 님 안녕하세요!"
 		}
-
-		val adapter = MemoAdapter()
-		memoList.layoutManager =
-			LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-		memoList.adapter = adapter
-
-		vmFactory = memoInjection.ProvideVMFactory(this, user)
-		memoVM.memos.observe(this, Observer(adapter::submitList))
+		memoList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+		memoList.adapter = MemoAdapter().also {
+			vmFactory = memoInjection.ProvideVMFactory(this, user)
+			memoVM.memos.observe(this, Observer(it::submitList))
+		}
 
 		fab.setOnClickListener { addItem() }
 
+		initSnapHelper()
 		initSwipeGesture()
 		bottomSheetInit()
+	}
+
+	private fun initSnapHelper() {
+		LinearSnapHelper()
+			.attachToRecyclerView(memoList)
 	}
 
 	private fun initSwipeGesture() {
@@ -110,18 +112,19 @@ class LoginedActivty: AppCompatActivity() {
 					icon = R.drawable.ic_delete_24dp
 				}
 
-				if (actionState == MotionEvent.ACTION_DOWN || actionState == MotionEvent.ACTION_MOVE)
-					value = calc.GetFloatValue(viewHolder.itemView.height * 0.7f, dY)
+				value = calc.GetFloatValue(viewHolder.itemView.height * 0.7f, dY)
 
-				conditionViewLayout.apply {
-					background.setColorFilter(color, PorterDuff.Mode.ADD)
-					scaleX = value * 2.5f
-					scaleY = value * 2.5f
-				}
-				conditionViewImage.apply {
-					setImageDrawable(ContextCompat.getDrawable(this@LoginedActivty, icon))
-					scaleX = value * 1.5f
-					scaleY = value * 1.5f
+				if (value < 1.0f) {
+					conditionViewLayout.apply {
+						background.setColorFilter(color, PorterDuff.Mode.ADD)
+						scaleX = value * 2.5f
+						scaleY = value * 2.5f
+					}
+					conditionViewImage.apply {
+						setImageDrawable(ContextCompat.getDrawable(this@LoginedActivty, icon))
+						scaleX = value * 1.5f
+						scaleY = value * 1.5f
+					}
 				}
 			}
 
@@ -139,20 +142,22 @@ class LoginedActivty: AppCompatActivity() {
 						}
 					}
 					ItemTouchHelper.DOWN -> {
-						(viewHolder as MemoHolder).memo?.let {
-							memo = it
+						(viewHolder as MemoHolder).memo?.apply {
+							memo = this
 							isEdit = true
 							editPosition = viewHolder.adapterPosition
 
-							InsertMemoTitle.text.insert(0, it.MemoTitle)
-							InsertMemoContent.text.insert(0, it.MemoContent)
-
-							InsertMemoBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+							InsertMemoTitle.text.insert(0, MemoTitle)
+							InsertMemoContent.text.insert(0, MemoContent)
 						}
 					}
 				}
+				fadeThread(100, object : fadeThread.FadeThreadListener{
+					override fun onFadingEnd() {
+						if(isEdit)
+							InsertMemoBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+					}
 
-				fadeThread(300, object : fadeThread.FadeThreadListener{
 					override fun onFading(value: Float) {
 						this@LoginedActivty.value = value
 							conditionViewLayout.let {
@@ -302,10 +307,12 @@ class LoginedActivty: AppCompatActivity() {
 				Thread.sleep(duration / 100)
 				callback.onFading(value).also { value -= 0.01f }
 			}
+			callback.onFadingEnd()
 		}
 
 		interface FadeThreadListener {
 			fun onFading(value: Float)
+			fun onFadingEnd()
 		}
 	}
 }

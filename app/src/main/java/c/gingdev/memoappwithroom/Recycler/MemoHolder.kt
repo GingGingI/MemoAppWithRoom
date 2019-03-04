@@ -22,9 +22,11 @@ class MemoHolder(parent: ViewGroup): RecyclerView.ViewHolder(
 		this.memo = memo
 		memoTitle.text = memo?.MemoTitle
 		memoUser.text = "${memo?.UserId} 의 메모"
-		memoDate.text = "${memo?.MemoDate}"
+		memoDate.text = String.format("%s-%s-%s"
+			,memo?.MemoDate.toString().substring(0, 4)
+			,memo?.MemoDate.toString().substring(4, 6)
+			,memo?.MemoDate.toString().substring(6,8))
 		memoContent.text = "${memo?.MemoContent}"
-
 	}
 
 }
